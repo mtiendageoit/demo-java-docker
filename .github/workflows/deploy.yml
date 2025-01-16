@@ -16,13 +16,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Debug: Información del evento activador
-    - name: Debug Event Info
-      run: |
-        echo "Evento: ${{ github.event_name }}"
-        echo "Ref: ${{ github.ref }}"
-        echo "SHA: ${{ github.sha }}"
-        echo "Tag o Release: ${{ github.ref_name }}"
+    - name: Extract Version from pom.xml
+      id: extract_version
+      run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+
+    - name: Debug Version
+      run: echo "Application version is: ${{ env.VERSION }}"
 
     # 2. Configura JDK 11
     - name: Set up JDK 11
@@ -45,7 +44,8 @@ jobs:
     # 5. Copia el WAR y Dockerfile al servidor remoto
     - name: Copy WAR and Dockerfile to Remote Server
       run: |
-        scp -o StrictHostKeyChecking=no -P 5422 target/demo-1.0.1.war mtienda@astra.growjet.tech:/opt/apps/demo/demo-1.0.1.war
+        scp -o StrictHostKeyChecking=no -P 5422 target/demo-${{ env.VERSION }}.war mtienda@astra.growjet.tech:/opt/apps/demo/demo-${{ env.VERSION }}.war
+        sed -i "s/{{VERSION}}/${{ env.VERSION }}/g" Dockerfile
         scp -o StrictHostKeyChecking=no -P 5422 Dockerfile mtienda@astra.growjet.tech:/opt/apps/demo/Dockerfile
 
     # 6. Ejecuta comandos en el servidor remoto para construir y desplegar el contenedor
@@ -53,7 +53,7 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no -p 5422 mtienda@astra.growjet.tech << 'EOF'
           cd /opt/apps/demo
-          docker build -t demo-app:latest .
+          docker build -t demo-app:V-${{ env.VERSION }} .
           docker stop demo-app || true
           docker rm demo-app || true
           docker run -d --name demo-app -p 8081:8080 demo-app:latest
