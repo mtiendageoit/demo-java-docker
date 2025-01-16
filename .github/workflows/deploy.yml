@@ -45,7 +45,7 @@ jobs:
     # 5. Copia el WAR y Dockerfile al servidor remoto
     - name: Copy WAR and Dockerfile to Remote Server
       run: |
-        scp -o StrictHostKeyChecking=no -P 5422 target/demo-1.0.0.war mtienda@astra.growjet.tech:/opt/apps/demo/demo-1.0.0.war
+        scp -o StrictHostKeyChecking=no -P 5422 target/demo-1.0.1.war mtienda@astra.growjet.tech:/opt/apps/demo/demo-1.0.1.war
         scp -o StrictHostKeyChecking=no -P 5422 Dockerfile mtienda@astra.growjet.tech:/opt/apps/demo/Dockerfile
 
     # 6. Ejecuta comandos en el servidor remoto para construir y desplegar el contenedor
