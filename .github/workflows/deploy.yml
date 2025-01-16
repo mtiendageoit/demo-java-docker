@@ -55,8 +55,8 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no -p 5422 mtienda@astra.growjet.tech << 'EOF'
           cd /opt/apps/demo
-          docker build -t demo-app:V-${{ env.VERSION }} .
+          docker build -t demo-app:${{ env.VERSION }} .
           docker stop demo-app || true
           docker rm demo-app || true
-          docker run -d --name demo-app -p 8081:8080 demo-app:latest
+          docker run -d --name demo-app -p 8081:8080 demo-app:${{ env.VERSION }}
         EOF
