@@ -1,4 +1,4 @@
-FROM tomcat:9.0-jdk17
+FROM tomcat:8.5-jdk11
 
 COPY target/demo-1.0.0.war /usr/local/tomcat/webapps/demo.war
 
