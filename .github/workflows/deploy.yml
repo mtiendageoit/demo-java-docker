@@ -41,7 +41,7 @@ jobs:
     # 6. Ejecuta comandos en el servidor remoto para construir y desplegar el contenedor
     - name: Build and Deploy Docker Container on Remote Server
       run: |
-        ssh -o StrictHostKeyChecking=no mtienda@astra.growjet.tech << 'EOF'
+        ssh -o StrictHostKeyChecking=no -p 5422 mtienda@astra.growjet.tech << 'EOF'
           cd /opt/apps/demo
           docker build -t demo-app:latest .
           docker stop demo-app || true
