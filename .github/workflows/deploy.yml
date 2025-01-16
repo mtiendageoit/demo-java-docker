@@ -23,7 +23,7 @@ jobs:
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
     - name: Debug Version
-      run: echo "Application version is: ${{ env.VERSION }}"
+      run: echo "Application version is ${{ env.VERSION }}"
 
     # 2. Configura JDK 11
     - name: Set up JDK 11
