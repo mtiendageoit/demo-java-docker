@@ -43,8 +43,8 @@ jobs:
       run: |
         ssh -o StrictHostKeyChecking=no opc@150.136.98.109 << 'EOF'
           cd /home/opc/proyectos/demo
-          docker build -t demo-app:latest .
-          docker stop demo-app || true
-          docker rm demo-app || true
-          docker run -d --name demo-app -p 8081:8080 demo-app:latest
+          sudo docker build -t demo-app:latest .
+          sudo docker stop demo-app || true
+          sudo docker rm demo-app || true
+          sudo docker run -d --name demo-app -p 8081:8080 demo-app:latest
         EOF
