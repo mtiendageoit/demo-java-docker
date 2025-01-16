@@ -46,14 +46,14 @@ jobs:
     # 5. Copia el WAR y Dockerfile al servidor remoto
     - name: Copy WAR and Dockerfile to Remote Server
       run: |
-        scp -o StrictHostKeyChecking=no -P 5422 target/demo-${{ env.VERSION }}.war mtienda@astra.growjet.tech:/opt/apps/demo/demo-${{ env.VERSION }}.war
+        scp -o StrictHostKeyChecking=no -P ${{ secrets.CODECREANDO_APPS_SSH_PORT }} target/demo-${{ env.VERSION }}.war ${{ secrets.CODECREANDO_APPS_SSH_USER }}@${{ secrets.CODECREANDO_APPS_SSH_HOST }}:/opt/apps/demo/demo-${{ env.VERSION }}.war
         sed -i "s/{{VERSION}}/${{ env.VERSION }}/g" Dockerfile
-        scp -o StrictHostKeyChecking=no -P 5422 Dockerfile mtienda@astra.growjet.tech:/opt/apps/demo/Dockerfile
+        scp -o StrictHostKeyChecking=no -P ${{ secrets.CODECREANDO_APPS_SSH_PORT }} Dockerfile ${{ secrets.CODECREANDO_APPS_SSH_USER }}@${{ secrets.CODECREANDO_APPS_SSH_HOST }}:/opt/apps/demo/Dockerfile
 
     # 6. Ejecuta comandos en el servidor remoto para construir y desplegar el contenedor
     - name: Build and Deploy Docker Container on Remote Server
       run: |
-        ssh -o StrictHostKeyChecking=no -p 5422 mtienda@astra.growjet.tech << 'EOF'
+        ssh -o StrictHostKeyChecking=no -p ${{ secrets.CODECREANDO_APPS_SSH_PORT }} ${{ secrets.CODECREANDO_APPS_SSH_USER }}@${{ secrets.CODECREANDO_APPS_SSH_HOST }} << 'EOF'
           cd /opt/apps/demo
           docker build -t demo-app:${{ env.VERSION }} .
           docker stop demo-app || true
