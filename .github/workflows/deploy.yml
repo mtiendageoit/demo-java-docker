@@ -3,9 +3,9 @@ name: Deploy to Remote Server
 on:
   push:
     tags:
-      - 'v*'  # Esto significa que cualquier tag que empiece con "v" activará el workflow
+      - '*'  # Esto activa el flujo para cualquier tag
   release:
-    types: [published]  # Esto activará el flujo cuando se publique una release
+    types: [created, published]  # Activa el flujo al crear o publicar una release
 
 jobs:
   deploy:
@@ -15,6 +15,14 @@ jobs:
     # 1. Checa el código del repositorio
     - name: Checkout code
       uses: actions/checkout@v3
+
+    # Debug: Información del evento activador
+    - name: Debug Event Info
+      run: |
+        echo "Evento: ${{ github.event_name }}"
+        echo "Ref: ${{ github.ref }}"
+        echo "SHA: ${{ github.sha }}"
+        echo "Tag o Release: ${{ github.ref_name }}"
 
     # 2. Configura JDK 11
     - name: Set up JDK 11
